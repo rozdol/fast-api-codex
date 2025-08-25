@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { IonApp, IonContent } from "@ionic/react";
+import { IonApp, IonContent, IonText } from "@ionic/react";
 import TinderCard from "react-tinder-card";
 import axios from "axios";
 
@@ -14,10 +14,27 @@ interface Offer {
 
 function App() {
   const [offer, setOffer] = useState<Offer | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   const fetchNext = async () => {
-    const res = await axios.get<Offer>("/offers/next");
-    setOffer(res.data);
+    try {
+      const res = await axios.get<Offer>("/offers/next");
+      if (res.data) {
+        setOffer(res.data);
+        setMessage(null);
+      } else {
+        setOffer(null);
+        setMessage("No offers available");
+      }
+    } catch (err) {
+      setOffer(null);
+      if (axios.isAxiosError(err)) {
+        const detail = err.response?.data as { detail?: string };
+        setMessage(detail?.detail || err.message);
+      } else {
+        setMessage("Failed to fetch offer");
+      }
+    }
   };
 
   useEffect(() => {
@@ -35,7 +52,7 @@ function App() {
   return (
     <IonApp>
       <IonContent fullscreen>
-        {offer && (
+        {offer ? (
           <TinderCard onSwipe={onSwipe} preventSwipe={["up", "down"]}>
             <div className="offer-card">
               <h2>{offer.title}</h2>
@@ -43,6 +60,12 @@ function App() {
               <p>Expires at: {new Date(offer.expires_at).toLocaleString()}</p>
             </div>
           </TinderCard>
+        ) : (
+          message && (
+            <IonText color="medium">
+              <p>{message}</p>
+            </IonText>
+          )
         )}
       </IonContent>
     </IonApp>
