@@ -8,3 +8,11 @@ node_modules/
 dist/
 .idea/
 .vscode/
+.venv/
+*.log
+*.sqlite3
+*.db
+frontend/build/
+*.egg-info/
+*.egg
+package-lock.json
