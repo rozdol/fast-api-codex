@@ -19,7 +19,7 @@ class User(SQLModel, table=True):
     notify_whatsapp: bool = Field(default=False)
     notify_telegram: bool = Field(default=False)
 
-    liked_offers: list["LikedOffer"] = Relationship(back_populates="user")
+    liked_offers: list[LikedOffer] = Relationship(back_populates="user")
 
 
 class Offer(SQLModel, table=True):
@@ -30,7 +30,7 @@ class Offer(SQLModel, table=True):
     promo_code: Optional[str] = None
     expires_at: datetime
 
-    liked_by: list["LikedOffer"] = Relationship(back_populates="offer")
+    liked_by: list[LikedOffer] = Relationship(back_populates="offer")
 
 
 class LikedOffer(SQLModel, table=True):
