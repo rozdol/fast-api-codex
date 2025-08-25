@@ -19,8 +19,8 @@ class User(SQLModel, table=True):
     notify_sms: bool = Field(default=False)
     notify_whatsapp: bool = Field(default=False)
     notify_telegram: bool = Field(default=False)
-
     liked_offers: Mapped[list[LikedOffer]] = Relationship(back_populates="user")
+
 
 
 class Offer(SQLModel, table=True):
@@ -30,8 +30,8 @@ class Offer(SQLModel, table=True):
     referral_link: Optional[str] = None
     promo_code: Optional[str] = None
     expires_at: datetime
-
     liked_by: Mapped[list[LikedOffer]] = Relationship(back_populates="offer")
+
 
 
 class LikedOffer(SQLModel, table=True):
